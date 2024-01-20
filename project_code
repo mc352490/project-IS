@@ -2,6 +2,8 @@ from schnapsen import deck, game
 import random
 from schnapsen.game import SchnapsenGamePlayEngine
 from schnapsen.bots import RandBot, RdeepBot
+from scipy.stats import ttest_ind
+from scipy.stats import binom_test
 
 
 # Create bots.
@@ -69,10 +71,40 @@ def calculate_win_percentages(bot1_wins, bot2_wins):
     print("Bot2 Win Percentage: {:.2f}%".format(bot2_percentage))
     
     return bot1_percentage, bot2_percentage
+   
+   
+def binomial_test_wins(bot1_wins, bot2_wins):
+    """
+    Perform a binomial test to check if the difference in win rates between two bots is statistically significant, using significance level 0.05.
+
+    Parameters:
+    - bot1_wins: Number of wins for bot 1
+    - bot2_wins: Number of wins for bot 2
+
+    Returns:
+    - p_value: Two-tailed p-value
+    - significance: True if the difference is statistically significant, False otherwise
+    """
+    total_games = bot1_wins+bot2_wins #total number of games played by the bots
+
+    # Perform binomial test
+    p_value = binom_test([bot1_wins, bot2_wins], n=[total_games], alternative='two-sided')
+
+    # Assuming a significance level of 0.05
+    significance = p_value < 0.05
+
+    print("P-Value:", p_value)
+    print("Is the difference significant?:", significance)
+
+    return p_value, significance
          
-         
+      
+      
+      
          
          
 play_tournament(bot1, bot2, 10)
 calculate_win_percentages(bot1_wins, bot2_wins)
+binomial_test_wins(bot1_wins, bot2_wins)
+#ins_significance_testing(bot1_wins, bot2_wins)
 
