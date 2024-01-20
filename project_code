@@ -1,7 +1,6 @@
-#from schnapsen import deck, game
+from schnapsen import deck, game
 import random
 from schnapsen.game import SchnapsenGamePlayEngine
-engine = SchnapsenGamePlayEngine()
 from schnapsen.bots import RandBot, RdeepBot
 
 
@@ -10,9 +9,17 @@ bot1 = RandBot(rand=random.Random(42), name="randbot")
 #bot2 = MLPlayingBot(model_location=model_location, name="MLBot")
 bot2 = RdeepBot(16, 4, random.Random(42), name = "rdeepbot")
 
-def play_tournament(bot1, bot2):
+# Variables to keep track of wins
+bot1_wins = 0
+bot2_wins = 0
 
-    myrepeats = 10
+def play_tournament(bot1, bot2, repeats):
+    '''This function will play a number of games between two bots and keeps track of how much the bots won in their respective variables.
+    :param repeats: Number of repeats of games that this function will play.
+    '''
+    global bot1_wins, bot2_wins #Declare as global to indicate we're modifying the global variables
+    engine = SchnapsenGamePlayEngine()
+    myrepeats = repeats
 
     bots = [bot1,bot2]
     n = len(bots)
@@ -36,6 +43,12 @@ def play_tournament(bot1, bot2):
 
             wins[str(winner_id)] += game_points
 
+            #If bot1 wins, the bot1_wins variables will go up by 1. If bot2 wins, bot2_wins goes up by 1.
+            if winner_id == 0:
+                bot1_wins += 1
+            else:
+                bot2_wins += 1
+
             playedgames += 1
             print(
                 "Played {} out of {:.0f} games ({:.0f}%): {} \r".format(
@@ -43,5 +56,23 @@ def play_tournament(bot1, bot2):
                     
                 )
             )
-            
-play_tournament(bot1, bot2)
+
+def calculate_win_percentages(bot1_wins, bot2_wins):
+    '''This function converts the number of wins of bot1 and bot2 into percentages.
+    These numbers will be returned, but also printed.
+    '''
+    total_games = bot1_wins + bot2_wins
+    bot1_percentage = (bot1_wins / total_games) * 100 if total_games > 0 else 0
+    bot2_percentage = (bot2_wins / total_games) * 100 if total_games > 0 else 0
+    
+    print("Bot1 Win Percentage: {:.2f}%".format(bot1_percentage))
+    print("Bot2 Win Percentage: {:.2f}%".format(bot2_percentage))
+    
+    return bot1_percentage, bot2_percentage
+         
+         
+         
+         
+play_tournament(bot1, bot2, 10)
+calculate_win_percentages(bot1_wins, bot2_wins)
+
