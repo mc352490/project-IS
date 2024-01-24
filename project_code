@@ -4,13 +4,15 @@ import random
 from schnapsen.game import SchnapsenGamePlayEngine
 from schnapsen.bots import RandBot, RdeepBot
 from bots.agressive_bot import AggressiveBot
+from bots.passive_bot import PassiveBot
 from scipy.stats import binom_test
 
 
 # Create bots.
 bot1 = RandBot(rand=random.Random(42), name="randbot")
-bot2 = AggressiveBot(rand=random.Random(42), name="aggressivebot")
-#bot2 = RdeepBot(16, 4, random.Random(42), name = "rdeepbot")
+#bot2 = AggressiveBot(rand=random.Random(42), name="aggressivebot")
+bot2 = PassiveBot(rand=random.Random(42), name="passivebot")
+#bot1 = RdeepBot(16, 4, random.Random(42), name = "rdeepbot")
 
 # Variables to keep track of wins
 bot1_wins = 0
@@ -47,7 +49,7 @@ def play_tournament(bot1, bot2, repeats):
             wins[str(winner_id)] += game_points
 
             #If bot1 wins, the bot1_wins variables will go up by 1. If bot2 wins, bot2_wins goes up by 1.
-            if winner_id == 0:
+            if winner_id == bot1:
                 bot1_wins += 1
             else:
                 bot2_wins += 1
@@ -68,6 +70,8 @@ def calculate_win_percentages(bot1_wins, bot2_wins):
     bot1_percentage = (bot1_wins / total_games) * 100 if total_games > 0 else 0
     bot2_percentage = (bot2_wins / total_games) * 100 if total_games > 0 else 0
     
+    print(f"Bot1 wins: {bot1_wins}")
+    print(f"Bot2 wins: {bot2_wins}")
     print("Bot1 Win Percentage: {:.2f}%".format(bot1_percentage))
     print("Bot2 Win Percentage: {:.2f}%".format(bot2_percentage))
     
@@ -89,7 +93,7 @@ def binomial_test_wins(bot1_wins, bot2_wins):
     total_games = bot1_wins+bot2_wins #total number of games played by the bots
 
     # Perform binomial test
-    p_value = binom_test([bot1_wins, bot2_wins], n=[total_games], alternative='two-sided')
+    p_value = binom_test([bot1_wins, bot2_wins], n=[total_games], alternative='less')
 
     # Assuming a significance level of 0.05
     significance = p_value < 0.05
@@ -104,7 +108,7 @@ def binomial_test_wins(bot1_wins, bot2_wins):
       
          
          
-play_tournament(bot1, bot2, 5)
+play_tournament(bot1, bot2, 1000)
 calculate_win_percentages(bot1_wins, bot2_wins)
 binomial_test_wins(bot1_wins, bot2_wins)
 #ins_significance_testing(bot1_wins, bot2_wins)
