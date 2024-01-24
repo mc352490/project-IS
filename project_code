@@ -1,15 +1,16 @@
 from schnapsen import deck, game
+from deck import Card, Suit, Rank
 import random
 from schnapsen.game import SchnapsenGamePlayEngine
 from schnapsen.bots import RandBot, RdeepBot
-from scipy.stats import ttest_ind
+from bots.agressive_bot import AggressiveBot
 from scipy.stats import binom_test
 
 
 # Create bots.
 bot1 = RandBot(rand=random.Random(42), name="randbot")
-#bot2 = MLPlayingBot(model_location=model_location, name="MLBot")
-bot2 = RdeepBot(16, 4, random.Random(42), name = "rdeepbot")
+bot2 = AggressiveBot(rand=random.Random(42), name="aggressivebot")
+#bot2 = RdeepBot(16, 4, random.Random(42), name = "rdeepbot")
 
 # Variables to keep track of wins
 bot1_wins = 0
@@ -103,7 +104,7 @@ def binomial_test_wins(bot1_wins, bot2_wins):
       
          
          
-play_tournament(bot1, bot2, 10)
+play_tournament(bot1, bot2, 5)
 calculate_win_percentages(bot1_wins, bot2_wins)
 binomial_test_wins(bot1_wins, bot2_wins)
 #ins_significance_testing(bot1_wins, bot2_wins)
