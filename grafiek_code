@@ -1,0 +1,27 @@
+# %pip install matplotlib
+import matplotlib.pyplot as plt
+
+#data
+matches = ['rdeep vs aggressive', 'randbot vs aggressive', 'bullybot vs aggressive',
+           'rdeep vs passive', 'randbot vs passive', 'bullybot vs passive']
+winners = ['rdeep', 'aggressive', 'aggressive', 'rdeep', 'passive', 'bully']
+win_rates = [91.1, 53.3, 100, 82.7, 57.3, 75.6]
+
+# Plot
+plt.figure(figsize=(10, 6))
+bars = plt.bar(matches, win_rates, color=['blue' if winner == 'rdeep' else 'green' if winner == 'aggressive' else 'red' for winner in winners])
+
+# Rotate x-axis label
+plt.xticks(rotation=45, ha="right", fontsize=10)
+
+# font size label
+plt.xlabel('Matches', fontsize=12)
+plt.ylabel('Win-rate (%)', fontsize=12)
+plt.title('Win-rates of Matches', fontsize=14)
+
+# legend
+plt.legend(bars, winners, title='Winner', fontsize=10)
+
+# Save the chart as an image
+plt.tight_layout()
+plt.savefig('your_chart.png')
