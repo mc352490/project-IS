@@ -96,13 +96,13 @@ def binomial_test_wins(bot1_wins, bot2_wins):
     - bot2_wins: Number of wins for bot 2
 
     Returns:
-    - p_value: Two-tailed p-value
+    - p_value (one-sided, less or greater)
     - significance: True if the difference is statistically significant, False otherwise
     """
     total_games = bot1_wins+bot2_wins #total number of games played by the bots
 
     # Perform binomial test, which returns a p-value
-    p_value = binom_test([bot1_wins, bot2_wins], n=[total_games], alternative='two-sided')
+    p_value = binom_test([bot1_wins, bot2_wins], n=[total_games], alternative='greater')
 
     # Assuming a significance level of 0.05
     significance = p_value < 0.05
