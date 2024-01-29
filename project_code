@@ -5,14 +5,16 @@ from schnapsen.game import SchnapsenGamePlayEngine
 from schnapsen.bots import RandBot, RdeepBot
 from bots.agressive_bot import AggressiveBot
 from bots.passive_bot import PassiveBot
+from bots.bully_bot import BullyBot
 from scipy.stats import binom_test
 
 
 # Create bots.
-bot1 = RandBot(rand=random.Random(42), name="randbot")
-#bot2 = AggressiveBot(rand=random.Random(42), name="aggressivebot")
-bot2 = PassiveBot(rand=random.Random(42), name="passivebot")
-#bot1 = RdeepBot(16, 4, random.Random(42), name = "rdeepbot")
+bot2 = RandBot(rand=random.Random(42), name="randbot")
+#bot1 = AggressiveBot(rand=random.Random(42), name="aggressivebot")
+#bot2 = PassiveBot(rand=random.Random(42), name="passivebot")
+bot1 = RdeepBot(16, 4, random.Random(42), name = "rdeepbot")
+#bot1 = BullyBot(rand=random.Random(42), name= "bullybot")
 
 # Variables to keep track of wins
 bot1_wins = 0
@@ -20,7 +22,11 @@ bot2_wins = 0
 
 def play_tournament(bot1, bot2, repeats):
     '''This function will play a number of games between two bots and keeps track of how much the bots won in their respective variables.
+    :param bot1: A Schnapsen agent
+    :param bot2: A Schnapsen agent
     :param repeats: Number of repeats of games that this function will play.
+    
+    :returns: 
     '''
     global bot1_wins, bot2_wins #Declare as global to indicate we're modifying the global variables
     engine = SchnapsenGamePlayEngine()
@@ -48,7 +54,7 @@ def play_tournament(bot1, bot2, repeats):
 
             wins[str(winner_id)] += game_points
 
-            #If bot1 wins, the bot1_wins variables will go up by 1. If bot2 wins, bot2_wins goes up by 1.
+            #If bot1 wins a game, the bot1_wins variables will go up by 1. If bot2 wins, bot2_wins goes up by 1.
             if winner_id == bot1:
                 bot1_wins += 1
             else:
@@ -61,6 +67,9 @@ def play_tournament(bot1, bot2, repeats):
                     
                 )
             )
+            
+
+
 
 def calculate_win_percentages(bot1_wins, bot2_wins):
     '''This function converts the number of wins of bot1 and bot2 into percentages.
@@ -92,8 +101,8 @@ def binomial_test_wins(bot1_wins, bot2_wins):
     """
     total_games = bot1_wins+bot2_wins #total number of games played by the bots
 
-    # Perform binomial test
-    p_value = binom_test([bot1_wins, bot2_wins], n=[total_games], alternative='less')
+    # Perform binomial test, which returns a p-value
+    p_value = binom_test([bot1_wins, bot2_wins], n=[total_games], alternative='two-sided')
 
     # Assuming a significance level of 0.05
     significance = p_value < 0.05
@@ -107,9 +116,8 @@ def binomial_test_wins(bot1_wins, bot2_wins):
       
       
          
-         
+ #Calling the functions        
 play_tournament(bot1, bot2, 1000)
 calculate_win_percentages(bot1_wins, bot2_wins)
 binomial_test_wins(bot1_wins, bot2_wins)
-#ins_significance_testing(bot1_wins, bot2_wins)
 
