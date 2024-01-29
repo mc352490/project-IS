@@ -1,0 +1,21 @@
+import matplotlib.pyplot as plt
+
+# the given data
+bots = ['Aggressive', 'Passive']
+win_rates_rdeep = [91.1, 82.7]
+
+# Plotting the graph
+fig, ax = plt.subplots()
+
+# the bar chart for rdeep
+ax.bar(bots, win_rates_rdeep, color=['lightcoral', 'lightcoral'])
+
+# Adding labels and legend
+ax.set_ylabel('Win Rate (%)')
+ax.set_title('Win Rates of Rdeep Against Aggressive and Passive Bots')
+
+# saving the plot as png file
+plt.savefig('win_rates_rdeep_chart.png')
+
+# displaying the plot
+plt.show()
