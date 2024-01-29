@@ -1,0 +1,21 @@
+import matplotlib.pyplot as plt
+
+# the given data
+bots = ['Aggressive', 'Passive']
+win_rates_bullybot = [100, 75.6]
+
+# Plot the graph
+fig, ax = plt.subplots()
+
+# Bar chart for Bullybot
+ax.bar(bots, win_rates_bullybot, color=['darkred', 'darkred'])
+
+# adding labels and legend
+ax.set_ylabel('Win Rate (%)')
+ax.set_title('Win Rates of Bullybot Against Aggressive and Passive Bots')
+
+# saving plot as PNG file
+plt.savefig('win_rates_bullybot_chart.png')
+
+# Display plot
+plt.show()
